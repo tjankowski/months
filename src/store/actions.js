@@ -1,4 +1,5 @@
 import { color } from "../utils";
+import moment from "moment";
 
 export const actionTypes = {
   STEPS_LOAD: "steps.load",
@@ -20,8 +21,8 @@ export const useActions = (state, dispatch) => ({
   loadSteps: () => {
     dispatch(action(actionTypes.STEPS_LOAD));
   },
-  newGoal: (name, start, end) => {
-    dispatch(newGoal(name, start, end, color(state.goalIndex)));
+  newGoal: (name, start=moment(), end) => {
+    dispatch(newGoal(name, start, end || start.clone().add(1, "years"), color(state.goalIndex)));
   },
   loadGoals: () => {
     dispatch(action(actionTypes.GOALS_LOAD));
