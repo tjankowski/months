@@ -2,7 +2,7 @@ import React from "react";
 import { Colors, shadow } from "./CommonStyles";
 import styled from "styled-components";
 
-const Task = styled.div`
+const Task = styled.span`
   width: 1rem;
   height: 1rem;
   border: 1px solid
@@ -83,6 +83,8 @@ const Day = ({
   dailyGoals,
   selected,
   toggleTask,
+  newStep,
+  removeStep,
 }) => {
   return (
     <DayContainer disabled={disabled} dayOfWeek={dayOfWeek}>
@@ -92,9 +94,10 @@ const Day = ({
           {dailyGoals.map((goal, index) => (
             <Task
               key={`${goal.id}`}
-              completed={selected.includes(goal.id)}
+              title={goal.name}
+              completed={selected[goal.id] != null}
               color={goal.color}
-              onClick={toggleTask(goal.id)}
+              onClick={selected[goal.id] != null? removeStep(selected[goal.id]) : newStep(goal.id)}
             ></Task>
           ))}
         </Tasks>

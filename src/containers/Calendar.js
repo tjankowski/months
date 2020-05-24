@@ -55,7 +55,7 @@ const Icon = styled.img`
 function App() {
   const {
     state,
-    actions: { nextMonth, prevMonth, newStep, newGoal },
+    actions: { nextMonth, prevMonth, newStep, removeStep, newGoal },
   } = useContext(StoreContext);
   const { date, steps, goals } = state;
 
@@ -63,7 +63,10 @@ function App() {
   const lastDayOfMonth = date.clone().endOf("month");
   const lastDayOfMonthAsWeekday = lastDayOfMonth.weekday();
   const dailySteps = steps.reduce((byDay, step) => {
-    byDay[step.date] = [byDay[step.date] || [], step.goal];
+    byDay[step.date] = {
+      ...byDay[step.date],
+      [step.goal]: step.id,
+    };
     return byDay;
   }, {});
 
@@ -101,8 +104,9 @@ function App() {
               dayOfWeek={day.weekday()}
               dayOfMonth={dayOfMonth + 1}
               dailyGoals={dailyGoals}
-              selected={dailySteps[day] || []}
-              toggleTask={(goalId) => () => newStep(day, goalId)}
+              selected={dailySteps[day] || {}}
+              newStep={(goalId) => () => newStep(day, goalId)}
+              removeStep={(stepId) => () => removeStep(stepId)}
             />
           );
         })}
