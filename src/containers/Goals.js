@@ -4,6 +4,7 @@ import NewGoalForm from "../components/NewGoalForm";
 import { Colors, shadow } from "../components/CommonStyles";
 import Goal from "../components/Goal";
 import { StoreContext } from "../store";
+import { useTransition, animated, config } from "react-spring";
 
 const Header = styled.h1`
   font-size: 3rem;
@@ -46,13 +47,32 @@ const GoalName = styled.span`
   margin-bottom: 1em;
 `;
 
+const Preview = styled(animated.div)`
+  position: absolute;
+`;
+
+const PreviewContainer = styled(animated.div)`
+  grid-column-start: 8;
+  grid-column-end: span 5;
+  padding: 2rem;
+  position: relative;
+`;
+
 function Goals() {
   const { state, actions } = useContext(StoreContext);
-  const [selected, setSelected] = useState(null);
   const { goals, steps } = state;
-  const progress = selected ? {
-    steps: steps.filter((item) => item.goal === selected.id)
-  } : null;
+  const [selected, setSelected] = useState(goals[0] || {});
+  const progress = selected
+    ? {
+        steps: steps.filter((item) => item.goal === selected.id),
+      }
+    : null;
+  const transitions = useTransition(selected, (item) => item.id, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    config: config.slow,
+  });
   return (
     <>
       <Header>Goals</Header>
@@ -72,7 +92,16 @@ function Goals() {
             </ListItem>
           ))}
         </List>
-        {selected != null && <Goal goal={selected} progress={progress} />}
+        <PreviewContainer>
+        {transitions.map(
+          ({ item, key, props }) =>
+            item.id && (
+              <Preview key={key} style={props}>
+                <Goal goal={selected} progress={progress} />
+              </Preview>
+            )
+        )}
+        </PreviewContainer>
       </Container>
       <NewGoalForm onSubmit={() => actions.loadGoals()} />
     </>
