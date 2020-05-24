@@ -1,4 +1,3 @@
-import { xor } from "lodash";
 import moment from "moment";
 import { actionTypes } from "./actions";
 import { parseMoment, COLORS } from "../utils";
@@ -60,7 +59,7 @@ function reducerLogic(state, action) {
     case actionTypes.STEPS_DELETE:
       return {
         ...state,
-        steps: xor(state.steps || [], [action.payload]),
+        steps: (state.steps || []).filter((step) => step.id !== action.payload),
       };
 
     case actionTypes.STEPS_LOAD:

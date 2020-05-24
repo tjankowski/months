@@ -14,6 +14,9 @@ export const useActions = (state, dispatch) => ({
   newStep: (date, goal) => {
     dispatch(newStep(date, goal));
   },
+  removeStep: (stepId) => {
+    dispatch(action(actionTypes.STEPS_DELETE, stepId));
+  },
   loadSteps: () => {
     dispatch(action(actionTypes.STEPS_LOAD));
   },
