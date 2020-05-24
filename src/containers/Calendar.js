@@ -5,6 +5,7 @@ import iconNext from "../icons/arrow.forward.svg";
 import iconPrev from "../icons/arrow.back.svg";
 import Day from "../components/Day";
 import NewGoalForm from "../components/NewGoalForm";
+import GoalsLegend from "../components/GoalsLegend";
 import { StoreContext } from "../store";
 
 const CenterContainer = styled.div`
@@ -46,6 +47,15 @@ const Icon = styled.img`
   height: 2rem;
   cursor: pointer;
   transform: ${(props) => (props.left ? "rotate(180deg)" : null)};
+
+  @media print {
+    display: none;
+  }
+`;
+
+const Legend = styled.div`
+  grid-column: 1 / span 7;
+  margin: 3rem 0;
 
   @media print {
     display: none;
@@ -121,6 +131,9 @@ function App() {
             />
           );
         })}
+        <Legend>
+          <GoalsLegend goals={goals} />
+        </Legend>
       </Calendar>
       <NewGoalForm onSubmit={(value) => newGoal(value, moment())} />
     </CenterContainer>
