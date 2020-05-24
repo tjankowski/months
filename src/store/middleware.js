@@ -12,6 +12,8 @@ export const applyMiddleware = (dispatch) => (action) => {
       return goals(dispatch, action.payload);
     case actionTypes.STEPS_NEW:
       return newStep(dispatch, action.payload);
+    case actionTypes.STEPS_DELETE:
+      return removeStep(dispatch, action.payload);
     case actionTypes.STEPS_LOAD:
       return steps(dispatch, action.payload);
 
@@ -75,6 +77,15 @@ function newStep(dispatch, data) {
   );
 }
 
+function removeStep(dispatch, id) {
+  return deleteDocument(
+    dispatch,
+    actionTypes.STEPS_DELETE,
+    id,
+    stepsColllection
+  );
+}
+
 const goalsColllection = "goals";
 
 function goals(dispatch) {
@@ -119,6 +130,18 @@ function addDocument(dispatch, actionType, data, collection, converter) {
           ...data,
           id: docRef.id,
         })
+      )
+    );
+}
+
+function deleteDocument(dispatch, actionType, id, collection) {
+  return database
+    .collection(collection)
+    .doc(id)
+    .delete()
+    .then(() =>
+      dispatch(
+        action(actionType, id)
       )
     );
 }
